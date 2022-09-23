@@ -1,15 +1,14 @@
 package com.example.globalweather.services.impl;
 
 import com.example.globalweather.MockUnmarshaller;
-import com.example.globalweather.consumesoap.stub.GetCitiesByCountry;
-import com.example.globalweather.consumesoap.stub.GetCitiesByCountryResponse;
-import com.example.globalweather.consumesoap.stub.GetWeather;
-import com.example.globalweather.consumesoap.stub.GetWeatherResponse;
+import com.example.globalweather.consumesoap.stub.*;
 import com.example.globalweather.services.SoapClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
+
+import javax.xml.bind.JAXBElement;
 
 @Service
 public class SoapClientImpl extends WebServiceGatewaySupport implements SoapClient {
@@ -28,13 +27,13 @@ public class SoapClientImpl extends WebServiceGatewaySupport implements SoapClie
 
     @Override
     public GetCitiesByCountryResponse getCitiesByCountry(GetCitiesByCountry request) {
-        //Get xml from SOAP service
-        return (GetCitiesByCountryResponse) getWebServiceTemplate().marshalSendAndReceive(soapUrl, request);
+        JAXBElement res = (JAXBElement) getWebServiceTemplate().marshalSendAndReceive(soapUrl, request);
+        return (GetCitiesByCountryResponse) res.getValue();
     }
 
     @Override
     public GetWeatherResponse getWeather(GetWeather request) {
-        //Get xml from SOAP service
-        return (GetWeatherResponse) getWebServiceTemplate().marshalSendAndReceive(soapUrl, request);
+        JAXBElement res = (JAXBElement) getWebServiceTemplate().marshalSendAndReceive(soapUrl, request);
+        return (GetWeatherResponse) res.getValue();
     }
 }

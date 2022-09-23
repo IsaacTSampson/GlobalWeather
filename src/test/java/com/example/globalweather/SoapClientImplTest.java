@@ -13,7 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
-import static com.example.globalweather.TestFixtures.SOAP_URL;
+import javax.xml.bind.JAXBElement;
+
+import static com.example.globalweather.TestFixtures.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
@@ -35,24 +37,24 @@ class SoapClientImplTest {
     @Test
     void getCitiesByCountry() {
         GetCitiesByCountry request = new GetCitiesByCountry();
-        GetCitiesByCountryResponse getCitiesByCountryResponse = new GetCitiesByCountryResponse();
+        JAXBElement<GetCitiesByCountryResponse> getCitiesByCountryResponse = createJAXBElementGetCitiesByCountryResponse();
 
         when(webServiceTemplate.marshalSendAndReceive(SOAP_URL, request)).thenReturn(getCitiesByCountryResponse);
 
         var result = testee.getCitiesByCountry(request);
 
-        assertThat(result, is(getCitiesByCountryResponse));
+        assertThat(result, is(getCitiesByCountryResponse.getValue()));
     }
 
     @Test
     void getWeather() {
         GetWeather request = new GetWeather();
-        GetWeatherResponse getWeatherResponse = new GetWeatherResponse();
+        JAXBElement<GetWeatherResponse> getWeatherResponse = createJAXBElementGetWeatherResponse();
 
         when(webServiceTemplate.marshalSendAndReceive(SOAP_URL, request)).thenReturn(getWeatherResponse);
 
         var result = testee.getWeather(request);
 
-        assertThat(result, is(getWeatherResponse));
+        assertThat(result, is(getWeatherResponse.getValue()));
     }
 }
